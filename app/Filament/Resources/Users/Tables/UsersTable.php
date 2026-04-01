@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Models\Auth\Role;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -44,12 +45,15 @@ class UsersTable
             ])
             ->filters([
                 TrashedFilter::make(),
-                SelectFilter::make('is_active')
-                    ->label('Active Status')
-                    ->options([
-                        1 => 'Active',
-                        0 => 'Inactive',
-                ]),
+                // SelectFilter::make('role')
+                //     ->label('Role')
+                //     ->relationship('userRole', 'role_id')
+                //     ->options(
+                //         Role::all()->pluck('name', 'id')->toArray()
+                //     )
+                //     ->native(false)
+                //     ->searchable() 
+                //     ->preload()
             ])
             ->recordActions([
                 ActionGroup::make([

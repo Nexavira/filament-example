@@ -28,6 +28,8 @@ class RoleResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'User Management';
 
+    protected static ?string $slug = 'user-management/roles';
+
     public static function form(Schema $schema): Schema
     {
         return RoleForm::configure($schema);
@@ -48,7 +50,7 @@ class RoleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListRoles::route('/role'),
+            'index' => ListRoles::route('/'),
         ];
     }
 

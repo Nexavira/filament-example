@@ -28,6 +28,8 @@ class UserResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'User Management';
 
+    protected static ?string $slug = 'user-management/users';
+
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);
@@ -48,9 +50,7 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListUsers::route('/user'),
-            // 'create' => CreateUser::route('/create'),
-            // 'edit' => EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
         ];
     }
 

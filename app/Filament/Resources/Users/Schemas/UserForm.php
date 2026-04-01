@@ -188,7 +188,6 @@ class UserForm
                             ->extraAttributes([
                                 'style' => 'cursor: pointer !important;',
                             ]),
-                            // ->required(),
                         Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),

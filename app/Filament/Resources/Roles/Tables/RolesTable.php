@@ -32,13 +32,13 @@ class RolesTable
                     ->searchable(),
             ])
             ->filters([
-                TrashedFilter::make(),
-                SelectFilter::make('is_active')
-                    ->label('Active Status')
-                    ->options([
-                        1 => 'Active',
-                        0 => 'Inactive',
-                ]),
+                // TrashedFilter::make(),
+                // SelectFilter::make('is_active')
+                //     ->label('Active Status')
+                //     ->options([
+                //         1 => 'Active',
+                //         0 => 'Inactive',
+                // ]),
             ])
             ->recordActions([
                 ActionGroup::make([
