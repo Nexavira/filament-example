@@ -24,7 +24,7 @@ return new class extends Migration
             $table->epochTimestamps();
             $table->epochSoftDeletes();
 
-            $table->uniqueSoftDelete('name', 'code');
+            $table->uniqueSoftDelete(['name', 'code']);
         });
     }
 

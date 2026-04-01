@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\Auth\Role;
 use Dom\Text;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -11,7 +12,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\HtmlString;
 
 class UserForm
 {
@@ -43,31 +43,31 @@ class UserForm
             Grid::make(2)
                 ->schema([
                     Group::make([
-                        TextInput::make('full_name')
-                            ->label('Nama Lengkap')
-                            ->disabled(),
-                        TextInput::make('phone_number')
-                            ->label('Nomor Telepon')
-                            ->tel()
-                            ->disabled(),
-                        Select::make('role')
-                            ->label('Peran')
-                            ->options([
-                                'admin' => 'Administrator',
-                                'user' => 'Reguler User',
-                            ])
-                            ->native(false)
-                            ->searchable() 
-                            ->preload()
-                            ->extraAttributes([
-                                'style' => 'cursor: not-allowed !important;',
-                            ])
-                            ->disabled(),
+                        Group::make([
+                            TextInput::make('full_name')
+                                ->label('Nama Lengkap')
+                                ->required(),
+                            TextInput::make('phone_number')
+                                ->label('Nomor Telepon')
+                                ->tel(),
+                        ])->relationship('userInformation'),
+                        Group::make([
+                            Select::make('role_id')
+                                ->label('Peran')
+                                ->options(
+                                    Role::all()->pluck('name', 'id')
+                                )
+                                ->native(false)
+                                ->searchable() 
+                                ->preload()
+                                ->extraAttributes([
+                                    'style' => 'cursor: pointer !important;',
+                                ]),
+                        ])->relationship('userRole'),
                         Toggle::make('is_active')
                             ->label('Status Aktif')
-                            ->default(true)
-                            ->disabled(),
-                    ])->relationship('userInformation'),
+                            ->default(true),
+                    ])->columnSpan(1),
                     Group::make([
                         TextInput::make('email')
                             ->label('Email')
@@ -97,29 +97,31 @@ class UserForm
             Grid::make(2)
                 ->schema([
                     Group::make([
-                        TextInput::make('full_name')
-                            ->label('Nama Lengkap')
-                            ->required(),
-                        TextInput::make('phone_number')
-                            ->label('Nomor Telepon')
-                            ->tel(),
-                        Select::make('role')
-                            ->label('Peran')
-                            ->options([
-                                'admin' => 'Administrator',
-                                'user' => 'Reguler User',
-                            ])
-                            ->native(false)
-                            ->searchable() 
-                            ->preload()
-                            ->extraAttributes([
-                                'style' => 'cursor: pointer !important;',
-                            ]),
-                            // ->required(),
+                        Group::make([
+                            TextInput::make('full_name')
+                                ->label('Nama Lengkap')
+                                ->required(),
+                            TextInput::make('phone_number')
+                                ->label('Nomor Telepon')
+                                ->tel(),
+                        ])->relationship('userInformation'),
+                        Group::make([
+                            Select::make('role_id')
+                                ->label('Peran')
+                                ->options(
+                                    Role::all()->pluck('name', 'id')
+                                )
+                                ->native(false)
+                                ->searchable() 
+                                ->preload()
+                                ->extraAttributes([
+                                    'style' => 'cursor: pointer !important;',
+                                ]),
+                        ])->relationship('userRole'),
                         Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),
-                    ])->relationship('userInformation'),
+                    ])->columnSpan(1),
                     Group::make([
                         TextInput::make('email')
                             ->label('Email')
@@ -146,7 +148,7 @@ class UserForm
                             ->dehydrated(false)
                             ->same('password')
                             // ->helperText(new HtmlString('<span style="color: #dc2626; font-size: 0.875rem;">Masukkan ulang password untuk konfirmasi</span>'))
-                    ])
+                    ])->columnSpan(1)
                 ])->columnSpanFull(),    
         ]);
     }
@@ -170,29 +172,31 @@ class UserForm
             Grid::make(2)
                 ->schema([
                     Group::make([
-                        TextInput::make('full_name')
-                            ->label('Nama Lengkap')
-                            ->required(),
-                        TextInput::make('phone_number')
-                            ->label('Nomor Telepon')
-                            ->tel(),
-                        Select::make('role')
-                            ->label('Peran')
-                            ->options([
-                                'admin' => 'Administrator',
-                                'user' => 'Reguler User',
-                            ])
-                            ->native(false)
-                            ->searchable() 
-                            ->preload()
-                            ->extraAttributes([
-                                'style' => 'cursor: pointer !important;',
-                            ]),
-                            // ->required(),
+                        Group::make([
+                            TextInput::make('full_name')
+                                ->label('Nama Lengkap')
+                                ->required(),
+                            TextInput::make('phone_number')
+                                ->label('Nomor Telepon')
+                                ->tel(),
+                        ])->relationship('userInformation'),
+                        Group::make([
+                            Select::make('role_id')
+                                ->label('Peran')
+                                ->options(
+                                    Role::all()->pluck('name', 'id')
+                                )
+                                ->native(false)
+                                ->searchable() 
+                                ->preload()
+                                ->extraAttributes([
+                                    'style' => 'cursor: pointer !important;',
+                                ]),
+                        ])->relationship('userRole'),
                         Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),
-                    ])->relationship('userInformation'),
+                    ])->columnSpan(1),
                     Group::make([
                         TextInput::make('email')
                             ->label('Email')

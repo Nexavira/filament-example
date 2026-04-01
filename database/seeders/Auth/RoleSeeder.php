@@ -15,6 +15,10 @@ class RoleSeeder extends Seeder
             'description' => 'Ini adalah role Master Admin',
         ]);
 
-        $this->command->info('Role Master Admin berhasil dibuat!');
+        Role::create([
+            'name' => 'Medical Staff',
+            'code' => 'MS',
+            'description' => 'Ini adalah role Medical Staff',
+        ]);
     }
 }

@@ -10,24 +10,22 @@ use Laravel\Passport\HasApiTokens;
 
 class UserRole extends Model
 {
-    use HasFactory, Notifiable, HasApiTokens, Blameable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $table = 'user_roles';
     public $timestamps = false;
-    protected $dateFormat = 'U';
 
     protected $primaryKey = null;
     public $incrementing = false;
 
-    protected $hidden = 
-    [   
-        'id',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-        'updated_at',
-        'deleted_at',
-        'version'
+     protected $fillable = [
+        'user_id',
+        'role_id'
+    ];
+
+    protected $hidden = [
+        'user_id',
+        'role_id'
     ];
 
     public function user()

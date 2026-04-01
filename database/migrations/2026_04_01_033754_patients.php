@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_informations', function (Blueprint $table) {
+        Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            
             $table->string('full_name');
-            $table->string('phone_number');
+            $table->string('nik', 16)->nullable();
+            $table->string('phone_number')->nullable();
+            $table->date('date_of_birth');
+            $table->enum('gender', ['M', 'F']);
+            $table->text('address')->nullable();
 
             $table->integer('is_active')->default(1);
             $table->integer('version')->default(0);
@@ -24,7 +28,9 @@ return new class extends Migration
             $table->epochTimestamps();
             $table->epochSoftDeletes();
 
-            $table->index(['user_id', 'full_name', 'deleted_at']);
+            $table->uniqueSoftDelete(['nik']);
+            
+            $table->index(['full_name', 'nik', 'phone_number']);
         });
     }
 
@@ -33,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_informations');
+        Schema::dropIfExists('patients');
     }
 };

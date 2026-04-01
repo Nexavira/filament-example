@@ -11,20 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_informations', function (Blueprint $table) {
+        Schema::create('registrations', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('full_name');
-            $table->string('phone_number');
-
+            $table->foreignId('patient_id')->index()->constrained()->cascadeOnDelete();
+            $table->foreignId('medical_staff_id')->nullable()->constrained('users');
+            
+            $table->date('visit_date');
+            $table->integer('queue_number');
+            $table->string('complaint_category');
+            $table->text('complaint_description')->nullable();
+            $table->string('status')->default('waiting');
+            
             $table->integer('is_active')->default(1);
             $table->integer('version')->default(0);
             $table->userFootprints();
             $table->epochTimestamps();
             $table->epochSoftDeletes();
-
-            $table->index(['user_id', 'full_name', 'deleted_at']);
         });
     }
 
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_informations');
+        Schema::dropIfExists('registrations');
     }
 };

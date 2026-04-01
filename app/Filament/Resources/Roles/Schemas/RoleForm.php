@@ -2,17 +2,10 @@
 
 namespace App\Filament\Resources\Roles\Schemas;
 
-use Dom\Text;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\HtmlString;
 
 class RoleForm
 {
@@ -32,7 +25,6 @@ class RoleForm
     {
         return $schema->components([
             Group::make([
-
                 TextInput::make('name')
                     ->label('Name')
                     ->required()
@@ -66,7 +58,6 @@ class RoleForm
     {
         return $schema->components([
             Group::make([
-
                 TextInput::make('name')
                     ->label('Name')
                     ->required()
@@ -100,7 +91,6 @@ class RoleForm
     {
         return $schema->components([
             Group::make([
-
                 TextInput::make('name')
                     ->label('Name')
                     ->required()

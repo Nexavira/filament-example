@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Filament\Resources\Roles;
+namespace App\Filament\Resources\Patient\Patients;
 
-use App\Filament\Resources\Roles\Pages\ListRoles;
-use App\Filament\Resources\Roles\Schemas\RoleForm;
-use App\Filament\Resources\Roles\Tables\RolesTable;
-use UnitEnum;
-use App\Models\Auth\Role;
+use App\Filament\Resources\Patient\Patients\Pages\ListPatients;
+use App\Filament\Resources\Patient\Patients\Schemas\PatientForm;
+use App\Filament\Resources\Patient\Patients\Tables\PatientsTable;
+use App\Models\Patient\Patient;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -14,28 +13,29 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
-class RoleResource extends Resource
+class PatientResource extends Resource
 {
-    protected static ?string $model = Role::class;
+    protected static ?string $model = Patient::class;
 
-    protected static ?string $modelLabel = 'Role';
-    protected static ?string $pluralModelLabel = 'Roles';
+    protected static ?string $modelLabel = 'Patient';
+    protected static ?string $pluralModelLabel = 'Patients';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ShieldCheck;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Identification;
 
-    protected static ?string $recordTitleAttribute = 'Role';
+    protected static ?string $recordTitleAttribute = 'Patient';
 
-    protected static string|UnitEnum|null $navigationGroup = 'User Management';
+    protected static string|UnitEnum|null $navigationGroup = 'Patient Management';
 
     public static function form(Schema $schema): Schema
     {
-        return RoleForm::configure($schema);
+        return PatientForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return RolesTable::configure($table);
+        return PatientsTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -48,7 +48,7 @@ class RoleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListRoles::route('/role'),
+            'index' => ListPatients::route('/patient'),
         ];
     }
 
