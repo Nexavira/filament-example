@@ -14,15 +14,15 @@ class BaseModel extends Model
 {
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes, Blameable, HasUuids;
 
-    protected $dateFormat;
     protected $guarded = ['id'];
+    protected $dateFormat = 'U';
 
     protected $hidden = [
         'id',
         'created_by',
         'updated_by',
         'deleted_by',
-        'cretaed_at',
+        'created_at',
         'updated_at',
         'deleted_at',
         'is_active',
@@ -36,5 +36,15 @@ class BaseModel extends Model
             'updated_at' => 'datetime:U',
             'deleted_at' => 'datetime:U',
         ];
+    }
+    
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
+    public function getKeyName()
+    {
+        return 'id';
     }
 }

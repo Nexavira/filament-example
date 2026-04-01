@@ -18,7 +18,6 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes, Blameable, HasUuids;
 
     protected $table = 'users';
-    public $timestamps = false;
     protected $dateFormat = 'U';
     protected $guarded = ['id'];
 
@@ -63,7 +62,7 @@ class User extends Authenticatable
 
     public function userRole()
     {
-        return $this->belongsTo(UserRole::class, 'user_id', 'id');
+        return $this->hasOne(UserRole::class, 'user_id', 'id');
     }
 
     public function getNameAttribute()

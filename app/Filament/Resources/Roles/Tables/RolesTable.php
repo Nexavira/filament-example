@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users\Tables;
+namespace App\Filament\Resources\Roles\Tables;
 
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -10,37 +10,26 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class UsersTable
+class RolesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('photo_id')
-                    ->label('Profile Picture')
-                    ->circular()
-                    ->disk('public')
-                    ->visibility('public'),
-                TextColumn::make('userInformation.full_name')
-                    ->label('Full Name')
+                TextColumn::make('name')
+                    ->label('Name')
                     ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email')
+                TextColumn::make('code')
+                    ->label('Code')
                     ->searchable(),
-                TextColumn::make('userInformation.phone_number')
-                    ->label('Phone Number')
+                TextColumn::make('description')
+                    ->label('Description')
                     ->searchable(),
-                TextColumn::make('userRole.role.name')
-                    ->label('Role')
-                    ->badge()
-                    ->color('info')
-                    ->default('No Role Assigned'),
             ])
             ->filters([
                 TrashedFilter::make(),
