@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Roles\Tables;
 
+use App\Filament\Resources\Roles\RoleResource;
+use App\Models\Auth\Role;
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -11,8 +14,6 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
 class RolesTable
@@ -45,6 +46,11 @@ class RolesTable
                     ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),
+                    Action::make('manage_permissions')
+                        ->label('Permissions')
+                        ->icon('heroicon-m-shield-check')
+                        ->color('warning')
+                        ->url(fn (Role $record): string => RoleResource::getUrl('permissions', ['record' => $record])),
                 ]),
             ])
             ->toolbarActions([

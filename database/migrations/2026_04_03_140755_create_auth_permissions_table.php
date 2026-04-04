@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('auth_permissions', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name');
-            $table->string('code');
-            $table->text('description')->nullable();
+            $table->string('guard_name')->default('admin')->comment('admin', 'web', 'mobile');
+            $table->string('prefix_label');
+            $table->string('module_label');
+            $table->string('action_label');
+            $table->string('code')->unique();
 
             $table->integer('is_active')->default(1);
             $table->integer('version')->default(0);
@@ -24,7 +26,7 @@ return new class extends Migration
             $table->epochTimestamps();
             $table->epochSoftDeletes();
 
-            $table->uniqueSoftDelete('name', 'code');
+            $table->index(['module_label', 'action_label', 'prefix_label', 'deleted_at']);
         });
     }
 
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('auth_permissions');
     }
 };

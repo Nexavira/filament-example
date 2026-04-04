@@ -62,8 +62,8 @@ class UserResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('userInformation', 'userRole');
+        return parent::getEloquentQuery()->with('userInformation', 'userRole.role');
     }
 }

@@ -7,34 +7,34 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class UserRole extends Model
+class RolePermission extends Model
 {
     use HasFactory, Notifiable, HasApiTokens;
 
-    protected $table = 'auth_user_roles';
+    protected $table = 'auth_role_permissions';
     public $timestamps = false;
 
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = null;
     public $incrementing = false;
 
     protected $fillable = [
-        'user_id',
-        'role_id'
+        'role_id',
+        'permission_id'
     ];
 
     protected $hidden = 
     [   
-        'user_id',
         'role_id',
+        'permission_id',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
 
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id', 'id');
+    }
+
+    public function permission()
+    {
+        return $this->belongsTo(Permission::class, 'permission_id', 'id');
     }
 }

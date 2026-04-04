@@ -39,15 +39,22 @@ class AppServiceProvider extends ServiceProvider
             $this->integer('deleted_by')->nullable();
         });
 
-        Blueprint::macro('uniqueSoftDelete', function ($column) {
+        // Custom macro for unique constraint that ignores soft-deleted records
+        Blueprint::macro('uniqueSoftDelete', function ($columns) {
             $table = $this->getTable();
-            $indexName = "{$table}_{$column}_unique_active";
+            
+            $columnsArray = (array) $columns;
 
-            return $this->addCommand('uniqueSoftDelete', compact('indexName', 'table', 'column'));
+            $columnStringForName = implode('_', $columnsArray);
+            $indexName = "{$table}_{$columnStringForName}_unique_active";
+
+            $columnStringForSql = implode(', ', $columnsArray);
+
+            return $this->addCommand('uniqueSoftDelete', compact('indexName', 'table', 'columnStringForSql'));
         });
 
         \Illuminate\Database\Schema\Grammars\PostgresGrammar::macro('compileUniqueSoftDelete', function (Blueprint $blueprint, Fluent $command) {
-            return "CREATE UNIQUE INDEX {$command->indexName} ON {$command->table} ({$command->column}) WHERE deleted_at IS NULL";
+            return "CREATE UNIQUE INDEX {$command->indexName} ON {$command->table} ({$command->columnStringForSql}) WHERE deleted_at IS NULL";
         });
     }
 

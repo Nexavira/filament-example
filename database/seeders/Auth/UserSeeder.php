@@ -27,7 +27,5 @@ class UserSeeder extends Seeder
             'user_id' => $admin->id,
             'role_id' => 1,
         ]);
-
-        $this->command->info('Akun Master Admin berhasil dibuat!');
     }
 }

@@ -47,4 +47,9 @@ class BaseModel extends Model
     {
         return 'id';
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 }

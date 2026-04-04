@@ -14,10 +14,9 @@ use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes, Blameable, HasUuids;
 
-    protected $table = 'users';
+    protected $table = 'auth_users';
     protected $dateFormat = 'U';
     protected $guarded = ['id'];
 

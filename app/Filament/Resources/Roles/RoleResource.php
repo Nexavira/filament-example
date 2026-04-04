@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Roles;
 
 use App\Filament\Resources\Roles\Pages\ListRoles;
+use App\Filament\Resources\Roles\Pages\ManageRolePermissions;
 use App\Filament\Resources\Roles\Schemas\RoleForm;
 use App\Filament\Resources\Roles\Tables\RolesTable;
 use UnitEnum;
@@ -51,6 +52,7 @@ class RoleResource extends Resource
     {
         return [
             'index' => ListRoles::route('/'),
+            'permissions' => ManageRolePermissions::route('/{record}/permissions'),
         ];
     }
 

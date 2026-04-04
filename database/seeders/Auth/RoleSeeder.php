@@ -14,7 +14,5 @@ class RoleSeeder extends Seeder
             'code' => 'MA',
             'description' => 'Ini adalah role Master Admin',
         ]);
-
-        $this->command->info('Role Master Admin berhasil dibuat!');
     }
 }

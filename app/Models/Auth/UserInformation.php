@@ -2,27 +2,15 @@
 
 namespace App\Models\Auth;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Model;
 
-class UserInformation extends Model
+class UserInformation extends BaseModel
 {
-    use HasUuids;
+    protected $table = 'auth_user_informations'; 
 
-    protected $table = 'user_informations'; 
-
-    protected $guarded = ['id'];
-
-    protected $fillable = [
-        'user_id',
-        'full_name',
-        'phone_number',
-    ];
-
-    public $timestamps = false;
-
-    public function uniqueIds(): array
+    public function user()
     {
-        return ['uuid'];
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

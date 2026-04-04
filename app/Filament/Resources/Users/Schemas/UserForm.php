@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use Dom\Text;
+use App\Models\Auth\Role;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
@@ -11,7 +11,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\HtmlString;
 
 class UserForm
 {
@@ -38,49 +37,63 @@ class UserForm
                         ->avatar()
                         ->directory('profile-photos')
                         ->alignCenter()
-                        ->disabled(),
-                ])->columnSpanFull(),
+            ])->columnSpanFull(),
             Grid::make(2)
                 ->schema([
                     Group::make([
-                        TextInput::make('full_name')
-                            ->label('Nama Lengkap')
-                            ->disabled(),
-                        TextInput::make('phone_number')
-                            ->label('Nomor Telepon')
-                            ->tel()
-                            ->disabled(),
-                        Select::make('role')
-                            ->label('Peran')
-                            ->options([
-                                'admin' => 'Administrator',
-                                'user' => 'Reguler User',
-                            ])
-                            ->native(false)
-                            ->searchable() 
-                            ->preload()
-                            ->extraAttributes([
-                                'style' => 'cursor: not-allowed !important;',
-                            ])
-                            ->disabled(),
-                        Toggle::make('is_active')
-                            ->label('Status Aktif')
-                            ->default(true)
-                            ->disabled(),
-                    ])->relationship('userInformation'),
+                        Group::make([
+                            TextInput::make('full_name')
+                                ->label('Full Name')
+                                ->required(),
+                            TextInput::make('phone_number')
+                                ->label('Phone Number')
+                                ->tel(),
+                        ])->relationship('userInformation'),
+                        Group::make([
+                            TextInput::make('role_name')
+                                ->label('Role')
+                                ->afterStateHydrated(function ($component, $record) {
+                                    $component->state($record->userRole?->role?->name ?? '-');
+                                })
+                                ->disabled(),
+                        ]),
+                        // Toggle::make('is_active')
+                        //     ->label('Status Aktif')
+                        //     ->afterStateHydrated(function ($component, $record) {
+                        //         $component->state((bool) ($record->is_active ?? false));
+                        //     })
+                        //     ->disabled(),
+                    ])->columnSpan(1),
                     Group::make([
                         TextInput::make('email')
                             ->label('Email')
                             ->email()
-                            ->disabled(),
-                    ])
-                ])->columnSpanFull(),    
+                            ->required()
+                            ->unique(
+                                table: 'auth_users', 
+                                ignoreRecord: true,
+                                modifyRuleUsing: function ($rule) {
+                                    return $rule->whereNull('deleted_at');
+                                }
+                            ),
+                        // TextInput::make('password')
+                        //     ->label('Password')
+                        //     ->password()
+                        //     ->required()
+                        //     ->revealable()
+                        //     ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                        // TextInput::make('password_confirmation')
+                        //     ->label('Password Confirmation')
+                        //     ->password()
+                        //     ->required()
+                        //     ->revealable()
+                        //     ->dehydrated(false)
+                        //     ->same('password')
+                    ])->columnSpan(1)
+                ])->columnSpanFull(),     
         ]);
     }
 
-    /**
-     * Skema Khusus Halaman Create
-     */
     protected static function getCreateSchema(Schema $schema): Schema
     {
         return $schema->components([
@@ -90,43 +103,44 @@ class UserForm
                         ->label('Foto Profil')
                         ->image()
                         ->avatar()
-                        // ->imageEditor(true)
                         ->directory('profile-photos')
                         ->alignCenter(),
             ])->columnSpanFull(),
             Grid::make(2)
                 ->schema([
                     Group::make([
-                        TextInput::make('full_name')
-                            ->label('Nama Lengkap')
-                            ->required(),
-                        TextInput::make('phone_number')
-                            ->label('Nomor Telepon')
-                            ->tel(),
-                        Select::make('role')
-                            ->label('Peran')
-                            ->options([
-                                'admin' => 'Administrator',
-                                'user' => 'Reguler User',
-                            ])
-                            ->native(false)
-                            ->searchable() 
-                            ->preload()
-                            ->extraAttributes([
-                                'style' => 'cursor: pointer !important;',
-                            ]),
-                            // ->required(),
+                        Group::make([
+                            TextInput::make('full_name')
+                                ->label('Full Name')
+                                ->required(),
+                            TextInput::make('phone_number')
+                                ->label('Phone Number')
+                                ->tel(),
+                        ])->relationship('userInformation'),
+                        Group::make([
+                            Select::make('role_id')
+                                ->label('Role')
+                                ->options(
+                                    Role::all()->pluck('name', 'id')
+                                )
+                                ->native(false)
+                                ->searchable() 
+                                ->preload()
+                                ->extraAttributes([
+                                    'style' => 'cursor: pointer !important;',
+                                ]),
+                        ])->relationship('userRole'),
                         Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),
-                    ])->relationship('userInformation'),
+                    ])->columnSpan(1),
                     Group::make([
                         TextInput::make('email')
                             ->label('Email')
                             ->email()
                             ->required()
                             ->unique(
-                                table: 'users', 
+                                table: 'auth_users', 
                                 ignoreRecord: true,
                                 modifyRuleUsing: function ($rule) {
                                     return $rule->whereNull('deleted_at');
@@ -139,23 +153,20 @@ class UserForm
                             ->revealable()
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
                         TextInput::make('password_confirmation')
-                            ->label('Konfirmasi Password')
+                            ->label('Password Confirmation')
                             ->password()
                             ->required()
                             ->revealable()
                             ->dehydrated(false)
                             ->same('password')
                             // ->helperText(new HtmlString('<span style="color: #dc2626; font-size: 0.875rem;">Masukkan ulang password untuk konfirmasi</span>'))
-                    ])
+                    ])->columnSpan(1)
                 ])->columnSpanFull(),    
         ]);
     }
 
-    /**
-     * Skema Khusus Halaman Edit
-     */
     protected static function getEditSchema(Schema $schema): Schema
-        {
+    {
         return $schema->components([
             Grid::make(1)
                 ->schema([
@@ -163,60 +174,68 @@ class UserForm
                         ->label('Foto Profil')
                         ->image()
                         ->avatar()
-                        // ->imageEditor(true)
                         ->directory('profile-photos')
                         ->alignCenter(),
-            ])->columnSpanFull(),
+                ])->columnSpanFull(),
+
             Grid::make(2)
                 ->schema([
                     Group::make([
-                        TextInput::make('full_name')
-                            ->label('Nama Lengkap')
-                            ->required(),
-                        TextInput::make('phone_number')
-                            ->label('Nomor Telepon')
-                            ->tel(),
-                        Select::make('role')
-                            ->label('Peran')
-                            ->options([
-                                'admin' => 'Administrator',
-                                'user' => 'Reguler User',
-                            ])
+                        Group::make([
+                            TextInput::make('full_name')
+                                ->label('Full Name')
+                                ->required(),
+                            TextInput::make('phone_number')
+                                ->label('Phone Number')
+                                ->tel(),
+                        ])->relationship('userInformation'),
+
+                        Select::make('role_id')
+                            ->label('Role')
+                            ->options(Role::all()->pluck('name', 'id'))
                             ->native(false)
-                            ->searchable() 
+                            ->searchable()
                             ->preload()
-                            ->extraAttributes([
-                                'style' => 'cursor: pointer !important;',
-                            ]),
-                        Toggle::make('is_active')
-                            ->label('Status Aktif')
-                            ->default(true),
-                    ])->relationship('userInformation'),
+                            ->required()
+                            ->afterStateHydrated(function (Select $component, $record) {
+                                $component->state($record->userRole?->role_id);
+                            })
+                            ->dehydrated(false) 
+                            ->saveRelationshipsUsing(function ($state, $record) {
+                                $record->userRole()->updateOrCreate(
+                                    ['user_id' => $record->id],
+                                    ['role_id' => $state] 
+                                );
+                            })
+                        // Toggle::make('is_active')
+                        //     ->label('Status Aktif')
+                        //     ->afterStateHydrated(fn ($component, $record) => $component->state((bool) ($record->is_active ?? false))),
+                    ])->columnSpan(1),
+
                     Group::make([
                         TextInput::make('email')
                             ->label('Email')
                             ->email()
                             ->required()
-                            ->unique(
-                                table: 'users', 
-                                ignoreRecord: true,
-                                modifyRuleUsing: function ($rule) {
-                                    return $rule->whereNull('deleted_at');
-                                }
-                            ),
+                            ->unique(table: 'auth_users', ignoreRecord: true),
+
                         TextInput::make('password')
-                            ->label('Password')
+                            ->label('Password Baru (Kosongkan jika tidak mengubah password)')
                             ->password()
                             ->revealable()
-                            ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                            ->live(debounce: 500) 
+                            ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
+                            ->dehydrated(fn ($state) => filled($state)),
+
                         TextInput::make('password_confirmation')
-                            ->label('Konfirmasi Password')
+                            ->label('Password Confirmation Baru')
                             ->password()
                             ->revealable()
-                            ->dehydrated(false)
+                            ->required(fn ($get) => filled($get('password')))
+                            ->visible(fn ($get) => filled($get('password')))
                             ->same('password')
-                            // ->helperText(new HtmlString('<span style="color: #dc2626; font-size: 0.875rem;">Masukkan ulang password untuk konfirmasi</span>'))
-                    ])
+                            ->dehydrated(false),
+                    ])->columnSpan(1),
                 ])->columnSpanFull(),    
         ]);
     }

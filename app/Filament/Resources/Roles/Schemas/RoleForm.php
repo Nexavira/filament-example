@@ -2,17 +2,10 @@
 
 namespace App\Filament\Resources\Roles\Schemas;
 
-use Dom\Text;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\HtmlString;
 
 class RoleForm
 {
@@ -32,12 +25,11 @@ class RoleForm
     {
         return $schema->components([
             Group::make([
-
                 TextInput::make('name')
                     ->label('Name')
                     ->required()
                     ->unique(
-                        table: 'roles', 
+                        table: 'auth_roles', 
                         ignoreRecord: true,
                         modifyRuleUsing: function ($rule) {
                             return $rule->whereNull('deleted_at');
@@ -47,7 +39,7 @@ class RoleForm
                     ->label('Code')
                     ->required()
                     ->unique(
-                        table: 'roles', 
+                        table: 'auth_roles', 
                         ignoreRecord: true,
                         modifyRuleUsing: function ($rule) {
                             return $rule->whereNull('deleted_at');
@@ -59,9 +51,6 @@ class RoleForm
         ]);
     }
 
-    /**
-     * Skema Khusus Halaman Create
-     */
     protected static function getCreateSchema(Schema $schema): Schema
     {
         return $schema->components([
@@ -71,7 +60,7 @@ class RoleForm
                     ->label('Name')
                     ->required()
                     ->unique(
-                        table: 'roles', 
+                        table: 'auth_roles', 
                         ignoreRecord: true,
                         modifyRuleUsing: function ($rule) {
                             return $rule->whereNull('deleted_at');
@@ -81,7 +70,7 @@ class RoleForm
                     ->label('Code')
                     ->required()
                     ->unique(
-                        table: 'roles', 
+                        table: 'auth_roles', 
                         ignoreRecord: true,
                         modifyRuleUsing: function ($rule) {
                             return $rule->whereNull('deleted_at');
@@ -93,9 +82,6 @@ class RoleForm
         ]);
     }
 
-    /**
-     * Skema Khusus Halaman Edit
-     */
     protected static function getEditSchema(Schema $schema): Schema
     {
         return $schema->components([
@@ -105,7 +91,7 @@ class RoleForm
                     ->label('Name')
                     ->required()
                     ->unique(
-                        table: 'roles', 
+                        table: 'auth_roles', 
                         ignoreRecord: true,
                         modifyRuleUsing: function ($rule) {
                             return $rule->whereNull('deleted_at');
@@ -115,7 +101,7 @@ class RoleForm
                     ->label('Code')
                     ->required()
                     ->unique(
-                        table: 'roles', 
+                        table: 'auth_roles', 
                         ignoreRecord: true,
                         modifyRuleUsing: function ($rule) {
                             return $rule->whereNull('deleted_at');
