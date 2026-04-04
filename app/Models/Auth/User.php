@@ -19,6 +19,7 @@ class User extends Authenticatable
     protected $table = 'auth_users';
     protected $dateFormat = 'U';
     protected $guarded = ['id'];
+    protected $with = ['userRole.role.permissions'];
 
     protected $hidden = [
         'id',

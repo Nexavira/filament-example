@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Auth\Permission;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\ServiceProvider;
 
@@ -56,6 +59,25 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Database\Schema\Grammars\PostgresGrammar::macro('compileUniqueSoftDelete', function (Blueprint $blueprint, Fluent $command) {
             return "CREATE UNIQUE INDEX {$command->indexName} ON {$command->table} ({$command->columnStringForSql}) WHERE deleted_at IS NULL";
         });
+
+        // Permission System
+        $this->registerPermissionsToGates();
+    }
+
+    protected function registerPermissionsToGates(): void
+    {
+        if (app()->runningInConsole()) return;
+
+        if (! Schema::hasTable('auth_permissions')) return;
+
+        try {
+            Permission::get(['code'])->each(function ($permission) {
+                Gate::define($permission->code, function ($user) use ($permission) {
+                    return $user->userRole->role && $user->userRole->role->permissions->contains('code', $permission->code);
+                });
+            });
+        } catch (\Exception $e) {
+        }
     }
 
     protected function registerService($serviceName, $className)

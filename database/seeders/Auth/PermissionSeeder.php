@@ -3,56 +3,52 @@
 namespace Database\Seeders\Auth;
 
 use App\Models\Auth\Permission;
+use App\Models\Auth\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class PermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        $guards = ['admin', 'mobile', 'web'];
+        $files = ['admin', 'web', 'mobile'];
 
-        $structure = [
-            'Authentication' => [
-                'User' => ['View', 'Create', 'Edit', 'Delete', 'Reset Password'],
-                'Role' => ['View', 'Create', 'Edit', 'Delete'],
-                'Log'  => ['View', 'Export'],
-            ],
-            'Patient Management' => [
-                'Registration' => ['View', 'Create', 'Edit', 'Cancel'],
-                'Medical Record' => ['View', 'Create', 'Edit', 'Print'],
-                'History' => ['View'],
-            ],
-            'Transaction' => [
-                'Invoice' => ['View', 'Create', 'Payment', 'Void'],
-                'Report'  => ['Daily', 'Monthly', 'Annual'],
-            ],
-            'Master Data' => [
-                'Doctor' => ['View', 'Create', 'Edit', 'Delete'],
-                'Clinic' => ['View', 'Edit Settings'],
-                'Drug'   => ['View', 'Create', 'Edit', 'Stock In', 'Stock Out'],
-            ],
-        ];
+        $masterRole = Role::where('code', 'master_admin')->first();
 
-        foreach ($guards as $guard) {
-            foreach ($structure as $prefix => $modules) {
-                foreach ($modules as $module => $actions) {
-                    foreach ($actions as $action) {                        
-                        $code = Str::lower($guard . '_' . Str::slug($prefix, '_') . '_' . Str::slug($module, '_') . '_' . Str::slug($action, '_'));
+        foreach ($files as $guard) {
+            $path = database_path("data/permissions/{$guard}.json");
 
-                        Permission::create([
-                            'uuid'          => (string) Str::uuid(),
-                            'guard_name'    => $guard,
-                            'prefix_label'   => $prefix,
-                            'module_label'  => $module,
-                            'action_label'  => $action,
-                            'code'          => $code,
-                            'is_active'     => 1,
-                            'version'       => 1,
-                        ]);
-                    }
-                }
+            if (!File::exists($path)) {
+                $this->command->warn("File seeder untuk guard [{$guard}] tidak ditemukan. Skip...");
+                continue;
             }
+
+            $permissionsData = json_decode(File::get($path), true);
+
+            foreach ($permissionsData as $data) {
+                $code = Str::lower(
+                    $guard . '_' . 
+                    Str::slug($data['prefix_label'], '_') . '_' . 
+                    Str::slug($data['module_label'], '_') . '_' . 
+                    Str::slug($data['action_label'], '_')
+                );
+
+                $permission = Permission::updateOrCreate(
+                    ['code' => $code],
+                    [
+                        'uuid' => (string) Str::uuid(), 
+                        'guard_name' => $guard,
+                        'prefix_label' => $data['prefix_label'],
+                        'module_label' => $data['module_label'],
+                        'action_label' => $data['action_label'],
+                        'is_active' => 1,
+                        'version' => 1,
+                    ]
+                );
+
+                $masterRole->permissions()->syncWithoutDetaching([$permission->id]);
+            }            
         }
     }
 }

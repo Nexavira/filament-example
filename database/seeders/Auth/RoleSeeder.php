@@ -11,7 +11,7 @@ class RoleSeeder extends Seeder
     {
         Role::create([
             'name' => 'Master Admin',
-            'code' => 'MA',
+            'code' => 'master_admin',
             'description' => 'Ini adalah role Master Admin',
         ]);
     }

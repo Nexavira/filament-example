@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('')
-            ->brandName('Syntra')
+            ->brandName('Nexavira')
             ->login()
             ->spa()
             ->colors([
