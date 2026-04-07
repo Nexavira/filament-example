@@ -32,10 +32,9 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         $role = app('StoreRoleService')->execute([
-            'site_uuid' => $request->site_uuid,
             'name' => $request->name,
             'code' => $request->code,
-            'location' => $request->location,
+            'description' => $request->description,
         ]);
 
         return response()->json([
@@ -47,13 +46,7 @@ class RoleController extends Controller
 
     public function update (UpdateRoleRequest $request)
     {
-        $role = app('UpdateRoleService')->execute([
-            'area_uuid' => $request->area_uuid,
-            'site_uuid' => $request->site_uuid,
-            'name' => $request->name,
-            'code' => $request->code,
-            'location' => $request->location,
-        ]);
+        $role = app('UpdateRoleService')->execute($request->all());
 
         return response()->json([
             'success' => ( isset($role['error']) ? false : true ),
@@ -64,9 +57,7 @@ class RoleController extends Controller
     public function destroy (DeleteRoleRequest $request)
     {
 
-        $role = app('DeleteRoleService')->execute([
-            "area_uuid" => $request->area_uuid,
-        ]);
+        $role = app('DeleteRoleService')->execute($request->all());
 
         return response()->json([
             'success' => ( isset($role['error']) ? false : true ),

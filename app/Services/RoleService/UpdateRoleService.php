@@ -37,8 +37,8 @@ class UpdateRoleService extends DefaultService implements ServiceInterface {
     public function rules ($dto) {
         return [
             'role_uuid' => ['required','uuid', new ExistsUuid(new Role)],
-            'name' => ['required', new UniqueData('roles','name',$dto['role_uuid'])],
-            'code' => ['nullable', new UniqueData('roles','code',$dto['role_uuid'])],
+            'name' => ['required', new UniqueData('auth_roles','name',$dto['role_uuid'])],
+            'code' => ['nullable', new UniqueData('auth_roles','code',$dto['role_uuid'])],
             'description' => ['nullable'],
         ];
     }

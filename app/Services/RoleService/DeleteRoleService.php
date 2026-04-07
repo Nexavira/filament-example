@@ -24,10 +24,10 @@ class DeleteRoleService extends DefaultService implements ServiceInterface {
         return $dto;
     }
 
-    // public function rules ($dto) {
-    //     return [
-    //         'role_uuid' => ['required', 'uuid', new ExistsUuid(new Role)]
-    //     ];
-    // }
+    public function rules ($dto) {
+        return [
+            'role_uuid' => ['required', 'uuid', new ExistsUuid(new Role)]
+        ];
+    }
 
 }

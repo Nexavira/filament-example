@@ -31,8 +31,8 @@ class StoreRoleService extends DefaultService implements ServiceInterface {
 
     public function rules ($dto) {
         return [
-            'name' => ['required', new UniqueData('roles','name' ?? null)],
-            'code' => ['nullable', new UniqueData('roles','code' ?? null)],
+            'name' => ['required', new UniqueData('auth_roles','name' ?? null)],
+            'code' => ['nullable', new UniqueData('auth_roles','code' ?? null)],
             'description' => ['nullable'],
         ];
     }
