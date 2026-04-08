@@ -19,7 +19,7 @@ class User extends Authenticatable
     protected $table = 'auth_users';
     protected $dateFormat = 'U';
     protected $guarded = ['id'];
-    protected $with = ['userRole.role.permissions'];
+    protected $with = ['roleUser.role.permissions'];
 
     protected $hidden = [
         'id',
@@ -55,19 +55,19 @@ class User extends Authenticatable
         return ['uuid'];
     }
 
-    public function userInformation()
+    public function userDetail()
     {
-        return $this->hasOne(UserInformation::class, 'user_id', 'id');
+        return $this->hasOne(UserDetail::class, 'user_id', 'id');
     }
 
-    public function userRole()
+    public function roleUser()
     {
-        return $this->hasOne(UserRole::class, 'user_id', 'id');
+        return $this->hasOne(RoleUser::class, 'user_id', 'id');
     }
 
     public function getNameAttribute()
     {
-        return "{$this->userInformation?->full_name}";
+        return "{$this->userDetail?->full_name}";
     }
 
     public function getFilamentAvatarUrl(): ?string

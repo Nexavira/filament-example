@@ -5,9 +5,9 @@ namespace App\Models\Auth;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class UserInformation extends BaseModel
+class UserDetail extends BaseModel
 {
-    protected $table = 'auth_user_informations'; 
+    protected $table = 'auth_user_details'; 
 
     public function user()
     {

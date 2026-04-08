@@ -12,7 +12,7 @@ class Permission extends BaseModel
     {
         return $this->belongsToMany(
             Role::class, 
-            'auth_role_permissions', 
+            'auth_permission_role', 
             'permission_id', 
             'role_id'
         );

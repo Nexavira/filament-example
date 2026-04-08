@@ -25,16 +25,16 @@ class UsersTable
                     ->circular()
                     ->disk('public')
                     ->visibility('public'),
-                TextColumn::make('userInformation.full_name')
+                TextColumn::make('userDetail.full_name')
                     ->label('Full Name')
                     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                TextColumn::make('userInformation.phone_number')
+                TextColumn::make('userDetail.phone_number')
                     ->label('Phone Number')
                     ->searchable(),
-                TextColumn::make('userRole.role.name')
+                TextColumn::make('roleUser.role.name')
                     ->label('Role')
                     ->badge()
                     ->color('info')
@@ -44,7 +44,7 @@ class UsersTable
                 TrashedFilter::make(),
                 // SelectFilter::make('role')
                 //     ->label('Role')
-                //     ->relationship('userRole', 'role_id')
+                //     ->relationship('roleUser', 'role_id')
                 //     ->options(
                 //         Role::all()->pluck('name', 'id')->toArray()
                 //     )
@@ -53,7 +53,7 @@ class UsersTable
                 //     ->preload()
             ])
             ->checkIfRecordIsSelectableUsing(function ($record): bool {
-                return $record->userRole?->role?->code !== 'master_admin';
+                return $record->roleUser?->role?->code !== 'master_admin';
             })
             ->recordActions([
                 ActionGroup::make([
@@ -68,8 +68,8 @@ class UsersTable
                     DeleteBulkAction::make()
                         ->action(function (Collection $records) {
                             $records->each(function ($record) {
-                                $isMaster = ($record->userRole->role->code === 'master_admin') || 
-                                        (method_exists($record, 'role') && $record->userRole->role?->code === 'master_admin');
+                                $isMaster = ($record->roleUser->role->code === 'master_admin') || 
+                                        (method_exists($record, 'role') && $record->roleUser->role?->code === 'master_admin');
 
                                 if (! $isMaster) {
                                     $record->delete();

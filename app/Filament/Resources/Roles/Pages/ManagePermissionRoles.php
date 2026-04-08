@@ -3,8 +3,9 @@
 namespace App\Filament\Resources\Roles\Pages;
 
 use App\Filament\Resources\Roles\RoleResource;
-use App\Filament\Resources\Roles\Schemas\RolePermissionForm;
+use App\Filament\Resources\Roles\Schemas\PermissionRoleForm;
 use App\Models\Auth\Permission;
+use App\Models\Auth\PermissionRole;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -14,13 +15,13 @@ use Filament\Resources\Pages\Page;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
 
-class ManageRolePermissions extends Page implements HasForms
+class ManagePermissionRoles extends Page implements HasForms
 {
     use InteractsWithRecord, InteractsWithForms;
 
     protected static string $resource = RoleResource::class;
 
-    protected string $view = 'filament.resources.roles.pages.manage-role-permissions';
+    protected string $view = 'filament.resources.roles.pages.manage-permission-roles';
 
     public ?array $data = [];
 
@@ -35,7 +36,7 @@ class ManageRolePermissions extends Page implements HasForms
 
     public function form(Schema $form): Schema
     {
-        return RolePermissionForm::configure($form)
+        return PermissionRoleForm::configure($form)
             ->statePath('data');
     }
 
@@ -45,7 +46,7 @@ class ManageRolePermissions extends Page implements HasForms
         
         return [
             $resource::getUrl('index') => $resource::getBreadcrumb(),
-            '#' => 'Manage Permissions',
+            'Manage Permissions',
         ];
     }
 

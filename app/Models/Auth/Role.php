@@ -8,16 +8,16 @@ class Role extends BaseModel
 {
     protected $table = 'auth_roles';
 
-    public function userRole()
+    public function roleUser()
     {
-        return $this->belongsTo(UserRole::class, 'role_id', 'id');
+        return $this->belongsTo(RoleUser::class, 'role_id', 'id');
     }
 
     public function permissions()
     {
         return $this->belongsToMany(
             Permission::class, 
-            'auth_role_permissions', 
+            'auth_permission_role', 
             'role_id', 
             'permission_id'
         ); 

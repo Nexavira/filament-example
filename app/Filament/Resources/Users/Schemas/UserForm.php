@@ -48,12 +48,12 @@ class UserForm
                             TextInput::make('phone_number')
                                 ->label('Phone Number')
                                 ->tel(),
-                        ])->relationship('userInformation'),
+                        ])->relationship('userDetail'),
                         Group::make([
                             TextInput::make('role_name')
                                 ->label('Role')
                                 ->afterStateHydrated(function ($component, $record) {
-                                    $component->state($record->userRole?->role?->name ?? '-');
+                                    $component->state($record->roleUser?->role?->name ?? '-');
                                 })
                                 ->disabled(),
                         ]),
@@ -116,7 +116,7 @@ class UserForm
                             TextInput::make('phone_number')
                                 ->label('Phone Number')
                                 ->tel(),
-                        ])->relationship('userInformation'),
+                        ])->relationship('userDetail'),
                         Group::make([
                             Select::make('role_id')
                                 ->label('Role')
@@ -129,7 +129,7 @@ class UserForm
                                 ->extraAttributes([
                                     'style' => 'cursor: pointer !important;',
                                 ]),
-                        ])->relationship('userRole'),
+                        ])->relationship('roleUser'),
                         Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),
@@ -188,7 +188,7 @@ class UserForm
                             TextInput::make('phone_number')
                                 ->label('Phone Number')
                                 ->tel(),
-                        ])->relationship('userInformation'),
+                        ])->relationship('userDetail'),
 
                         Select::make('role_id')
                             ->label('Role')
@@ -198,11 +198,11 @@ class UserForm
                             ->preload()
                             ->required()
                             ->afterStateHydrated(function (Select $component, $record) {
-                                $component->state($record->userRole?->role_id);
+                                $component->state($record->roleUser?->role_id);
                             })
                             ->dehydrated(false) 
                             ->saveRelationshipsUsing(function ($state, $record) {
-                                $record->userRole()->updateOrCreate(
+                                $record->roleUser()->updateOrCreate(
                                     ['user_id' => $record->id],
                                     ['role_id' => $state] 
                                 );

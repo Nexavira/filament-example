@@ -73,7 +73,7 @@ class AppServiceProvider extends ServiceProvider
         try {
             Permission::get(['code'])->each(function ($permission) {
                 Gate::define($permission->code, function ($user) use ($permission) {
-                    return $user->userRole->role && $user->userRole->role->permissions->contains('code', $permission->code);
+                    return $user->roleUser->role && $user->roleUser->role->permissions->contains('code', $permission->code);
                 });
             });
         } catch (\Exception $e) {

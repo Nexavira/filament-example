@@ -17,13 +17,13 @@ class UserSeeder extends Seeder
             'version' => 0,
         ]);
 
-        $admin->userInformation()->create([
+        $admin->userDetail()->create([
             'user_id' => $admin->id,
             'full_name' => 'Master Admin',
             'phone_number' => '08123456789',
         ]);
 
-        $admin->userRole()->create([
+        $admin->roleUser()->create([
             'user_id' => $admin->id,
             'role_id' => 1,
         ]);

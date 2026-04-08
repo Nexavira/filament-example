@@ -14,7 +14,7 @@ class BasePolicy
         }
 
         if ($model instanceof User) {
-            return $model->userRole->role?->code === 'master_admin';
+            return $model->roleUser->role?->code === 'master_admin';
         }
 
         return false;
