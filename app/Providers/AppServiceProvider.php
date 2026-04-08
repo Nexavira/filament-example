@@ -17,6 +17,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // $this->app->register(\App\Providers\RegisterService\RegisterRoleService::class);
+
+        $this->app->register(\App\Providers\RegisterService\RegisterRoleService::class);
+        $this->app->register(\App\Providers\RegisterService\RegisterAuthService::class);
     }
 
     /**
