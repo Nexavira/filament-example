@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Auth\Permission;
+use App\Providers\RegisterService\RegisterAuthService;
+use App\Providers\RegisterService\RegisterPermissionService;
+use App\Providers\RegisterService\RegisterRoleService;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Grammars\PostgresGrammar;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Fluent;
@@ -18,8 +22,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // $this->app->register(\App\Providers\RegisterService\RegisterRoleService::class);
 
-        $this->app->register(\App\Providers\RegisterService\RegisterRoleService::class);
-        $this->app->register(\App\Providers\RegisterService\RegisterAuthService::class);
+        $this->app->register(RegisterRoleService::class);
+        $this->app->register(RegisterAuthService::class);
+        $this->app->register(RegisterPermissionService::class);
     }
 
     /**
@@ -48,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         // Custom macro for unique constraint that ignores soft-deleted records
         Blueprint::macro('uniqueSoftDelete', function ($columns) {
             $table = $this->getTable();
-            
+
             $columnsArray = (array) $columns;
 
             $columnStringForName = implode('_', $columnsArray);
@@ -59,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
             return $this->addCommand('uniqueSoftDelete', compact('indexName', 'table', 'columnStringForSql'));
         });
 
-        \Illuminate\Database\Schema\Grammars\PostgresGrammar::macro('compileUniqueSoftDelete', function (Blueprint $blueprint, Fluent $command) {
+        PostgresGrammar::macro('compileUniqueSoftDelete', function (Blueprint $blueprint, Fluent $command) {
             return "CREATE UNIQUE INDEX {$command->indexName} ON {$command->table} ({$command->columnStringForSql}) WHERE deleted_at IS NULL";
         });
 
@@ -69,9 +74,13 @@ class AppServiceProvider extends ServiceProvider
 
     protected function registerPermissionsToGates(): void
     {
-        if (app()->runningInConsole()) return;
+        if (app()->runningInConsole()) {
+            return;
+        }
 
-        if (! Schema::hasTable('auth_permissions')) return;
+        if (! Schema::hasTable('auth_permissions')) {
+            return;
+        }
 
         try {
             Permission::get(['code'])->each(function ($permission) {
@@ -86,7 +95,7 @@ class AppServiceProvider extends ServiceProvider
     protected function registerService($serviceName, $className)
     {
         $this->app->singleton($serviceName, function () use ($className) {
-            return new $className();
+            return new $className;
         });
     }
 }
